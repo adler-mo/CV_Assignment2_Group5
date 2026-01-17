@@ -1,5 +1,5 @@
 # TUWIEN - CV: Task3 - Scene recognition using Bag of Visual Words
-# *********+++++++++*******++++INSERT GROUP NO. HERE++++*******+++++++++*********
+# *********+++++++++*******++++Group 5++++*******+++++++++*********
 import glob
 import os
 import cv2
@@ -27,7 +27,33 @@ class SceneDataset:
         # The label of an image is the current subfolder (e.g., value between 0-9 when using 10 classes).
         # HINT: os.listdir(..), glob.glob(..), cv2.imread(..)
         # student_code start
-        raise NotImplementedError("TO DO in dataset.py")
+                # student_code start
+        # Collect subfolders (class names) and sort for stable label mapping
+        dirs = sorted([d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))])
+
+        for label, class_name in enumerate(dirs):
+            class_dir = os.path.join(path, class_name)
+
+            # Grab common image extensions (case-insensitive-ish)
+            patterns = ["*.jpg", "*.jpeg", "*.png", "*.bmp", "*.tif", "*.tiff", "*.JPG", "*.JPEG", "*.PNG", "*.BMP", "*.TIF", "*.TIFF"]
+            img_paths = []
+            for p in patterns:
+                img_paths.extend(glob.glob(os.path.join(class_dir, p)))
+
+            # Sort for reproducibility
+            img_paths = sorted(img_paths)
+
+            for img_path in img_paths:
+                img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+                if img is None:
+                    # Skip unreadable/corrupt files instead of crashing
+                    continue
+
+                # Normalize to [0, 1] float32
+                img = img.astype(np.float32) / 255.0
+
+                img_data.append(img)
+                labels.append(label)
         # student_code end
 
         # Save as local parameters
