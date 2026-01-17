@@ -34,14 +34,8 @@ class SceneDataset:
         for label, class_name in enumerate(dirs):
             class_dir = os.path.join(path, class_name)
 
-            # Grab common image extensions (case-insensitive-ish)
-            patterns = ["*.jpg", "*.jpeg", "*.png", "*.bmp", "*.tif", "*.tiff", "*.JPG", "*.JPEG", "*.PNG", "*.BMP", "*.TIF", "*.TIFF"]
-            img_paths = []
-            for p in patterns:
-                img_paths.extend(glob.glob(os.path.join(class_dir, p)))
-
-            # Sort for reproducibility
-            img_paths = sorted(img_paths)
+            # Sorting image paths to ensure consistent order
+            img_paths = sorted(glob.glob(os.path.join(class_dir, "*.jpg")))
 
             for img_path in img_paths:
                 img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
