@@ -1,5 +1,5 @@
 # TUWIEN - CV: Task4 - Mask Classification using CNN
-# *********+++++++++*******++++INSERT GROUP NO. HERE
+# Group 5
 import torch
 from torch.utils.data import Dataset
 from torchvision import transforms
@@ -56,7 +56,18 @@ class DataModule:
         data_transforms = None
 
         # student code start
-        raise NotImplementedError("TO DO in my_datamodule.py")
+        transformations = []
+        transformations.append(transforms.Resize((64, 64)))
+
+        if train and self.augmented:
+            transformations.append(transforms.RandomHorizontalFlip(p=0.5))
+            transformations.append(transforms.ColorJitter(brightness=0.2, contrast=0.2))
+            transformations.append(transforms.RandomRotation(degrees=20))
+
+        transformations.append(transforms.ToTensor())
+        transformations.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
+
+        data_transforms = transforms.Compose(transformations)
         # student code end
 
         return data_transforms

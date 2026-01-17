@@ -1,5 +1,5 @@
 # TUWIEN - CV: Task4 - Mask Classification using CNN
-# *********+++++++++*******++++INSERT GROUP NO. HERE
+# Group 5
 import os
 from tqdm import tqdm
 import numpy as np

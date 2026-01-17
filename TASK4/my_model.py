@@ -1,5 +1,5 @@
 # TUWIEN - CV: Task4 - Mask Classification using CNN
-# *********+++++++++*******++++INSERT GROUP NO. HERE
+# Group 5
 
 from typing import List
 import torch
@@ -26,7 +26,17 @@ class MaskClassifier(nn.Module):
         self.batch_norm = batch_norm
 
         # student code start
-        raise NotImplementedError("TO DO in my_model.py")
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=0)
+        self.bn1 = nn.BatchNorm2d(32) if batch_norm else nn.Identity()
+        self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
+
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=0)
+        self.bn2 = nn.BatchNorm2d(32) if batch_norm else nn.Identity()
+        self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
+
+        self.dropout_layer = nn.Dropout(p=dropout)
+        self.ln = nn.Linear(in_features=32*14*14, out_features=1)
+
         # student code end
 
 
@@ -43,7 +53,23 @@ class MaskClassifier(nn.Module):
         
         # student code start
         # Apply layers here
-        raise NotImplementedError("TO DO in my_model.py")
+
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = F.relu(x)
+        x = self.pool1(x)
+
+        x = self.conv2(x)
+        x = self.bn2(x)
+        x = F.relu(x)
+        x = self.pool2(x)
+
+        x = x.flatten(1)
+        x = self.dropout_layer(x)
+
+        x = self.ln(x)
+        x = F.sigmoid(x)
+
         # student code end
 
         return x
